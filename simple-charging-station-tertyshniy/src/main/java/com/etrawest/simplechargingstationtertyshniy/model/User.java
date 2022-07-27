@@ -14,8 +14,11 @@ public class User {
     private long id;
     @Column(unique = true)
     private String email;
+    private String name;
     private String password;
     private long phoneNumber;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     protected User(String email, String password, long phoneNumber) {
         this.email = email;
