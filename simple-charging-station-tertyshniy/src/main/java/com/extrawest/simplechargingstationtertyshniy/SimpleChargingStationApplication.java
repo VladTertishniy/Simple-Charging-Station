@@ -1,4 +1,4 @@
-package com.etrawest.simplechargingstationtertyshniy;
+package com.extrawest.simplechargingstationtertyshniy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
