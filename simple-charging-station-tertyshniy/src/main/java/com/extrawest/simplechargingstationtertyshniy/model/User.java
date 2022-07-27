@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(unique = true)
     private String email;
@@ -20,9 +20,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    protected User(String email, String password, long phoneNumber) {
+    protected User(String email, String password, long phoneNumber, String name, Role role) {
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.role = role;
     }
 }
