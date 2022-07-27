@@ -1,4 +1,4 @@
-package com.etrawest.simplechargingstationtertyshniy.model.dto.response;
+package com.extrawest.simplechargingstationtertyshniy.model.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

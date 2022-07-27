@@ -1,6 +1,6 @@
-package com.etrawest.simplechargingstationtertyshniy.repository;
+package com.extrawest.simplechargingstationtertyshniy.repository;
 
-import com.etrawest.simplechargingstationtertyshniy.model.User;
+import com.extrawest.simplechargingstationtertyshniy.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

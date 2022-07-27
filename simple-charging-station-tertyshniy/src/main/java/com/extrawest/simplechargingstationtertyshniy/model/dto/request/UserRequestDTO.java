@@ -1,4 +1,4 @@
-package com.etrawest.simplechargingstationtertyshniy.model.dto.request;
+package com.extrawest.simplechargingstationtertyshniy.model.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

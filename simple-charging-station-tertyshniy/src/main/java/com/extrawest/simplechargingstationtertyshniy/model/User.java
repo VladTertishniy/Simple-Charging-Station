@@ -1,4 +1,4 @@
-package com.etrawest.simplechargingstationtertyshniy.model;
+package com.extrawest.simplechargingstationtertyshniy.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
