@@ -1,0 +1,14 @@
+server:
+  port: 9050
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres-db:5432/chargingStation
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
