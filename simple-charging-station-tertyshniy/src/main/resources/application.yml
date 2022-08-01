@@ -5,7 +5,7 @@ spring:
     name: user-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres-db:5432/chargingStation
+    url: jdbc:postgresql://localhost:5432/chargingStation
     username: postgres
     password: admin
   jpa:
