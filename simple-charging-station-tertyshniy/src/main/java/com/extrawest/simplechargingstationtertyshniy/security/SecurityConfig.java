@@ -12,6 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -31,12 +35,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().formLogin()
 //                .and().httpBasic();
 
-        http.csrf().disable()
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
-                .and().httpBasic();
+                .and().httpBasic()
+                .and().cors().configurationSource(request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+                config.setAllowedMethods(Collections.singletonList("POST"));
+                return config;
+        });
+
+//        http.cors().configurationSource(request -> {
+//            CorsConfiguration config = new CorsConfiguration();
+//            config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+//            config.setAllowedMethods(Collections.singletonList("POST"));
+//            return config;
+//        });
     }
 
     @Override

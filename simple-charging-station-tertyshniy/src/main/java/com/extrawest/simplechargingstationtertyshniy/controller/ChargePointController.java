@@ -16,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/chargePoints")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class ChargePointController {
     private final ChargePointService chargePointService;
 

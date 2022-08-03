@@ -16,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
     private final UserService userService;
 

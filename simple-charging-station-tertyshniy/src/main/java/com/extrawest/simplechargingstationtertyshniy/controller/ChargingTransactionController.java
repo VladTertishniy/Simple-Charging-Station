@@ -16,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/chargingTransactions")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class ChargingTransactionController {
     private final ChargingTransactionService chargingTransactionService;
 

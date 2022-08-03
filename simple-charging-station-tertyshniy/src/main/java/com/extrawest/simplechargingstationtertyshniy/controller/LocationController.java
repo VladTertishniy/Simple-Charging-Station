@@ -16,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/locations")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class LocationController {
     private final LocationService locationService;
 
