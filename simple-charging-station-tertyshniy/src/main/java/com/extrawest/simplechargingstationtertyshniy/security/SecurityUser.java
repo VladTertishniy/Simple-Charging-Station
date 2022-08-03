@@ -7,8 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +15,7 @@ public class SecurityUser implements UserDetails {
     private final Long id;
     private final String userName;
     private final String password;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Set<? extends GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,11 +53,9 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(User user) {
-        List<GrantedAuthority> grantedAuthorities = new LinkedList<>();
-        return new SecurityUser(
-                user.getId(),
+        return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                grantedAuthorities);
+                user.getRole().getAuthorities());
     }
 }

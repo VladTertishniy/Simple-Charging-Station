@@ -11,8 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-
 @Component
 @AllArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -27,7 +25,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ApiRequestException("Bad credentials");
         }
-        return new UsernamePasswordAuthenticationToken(email, password, new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(email, password, authentication.getAuthorities());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.extrawest.simplechargingstationtertyshniy.controller;
 
+import com.extrawest.simplechargingstationtertyshniy.model.dto.request.AuthenticationRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.UserRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.UserResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.service.AuthenticationService;
@@ -22,5 +23,11 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid UserRequestDTO userRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService.register(userRequestDto));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid AuthenticationRequestDTO requestDto) {
+        authenticationService.login(requestDto.getEmail(), requestDto.getPassword());
+        return ResponseEntity.ok("Congratulate with success log in!");
     }
 }
