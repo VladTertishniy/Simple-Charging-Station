@@ -1,5 +1,8 @@
 package com.extrawest.simplechargingstationtertyshniy.security;
 
+import com.extrawest.simplechargingstationtertyshniy.filter.AuthenticationProcessFilter;
+import com.extrawest.simplechargingstationtertyshniy.filter.AuthenticationResponseFilter;
+import com.extrawest.simplechargingstationtertyshniy.filter.IpCheckFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -42,6 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable()/*.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()*/
+                .addFilterBefore(new IpCheckFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthenticationProcessFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthenticationResponseFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/locations/**").authenticated()
