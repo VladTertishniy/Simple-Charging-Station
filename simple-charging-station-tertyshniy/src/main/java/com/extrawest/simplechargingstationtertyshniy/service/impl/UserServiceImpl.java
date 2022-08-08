@@ -4,6 +4,7 @@ import com.extrawest.simplechargingstationtertyshniy.exception.ApiRequestExcepti
 import com.extrawest.simplechargingstationtertyshniy.model.Role;
 import com.extrawest.simplechargingstationtertyshniy.model.User;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.UserRequestDTO;
+import com.extrawest.simplechargingstationtertyshniy.model.dto.response.DeleteResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.UserResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.mapper.UserMapper;
 import com.extrawest.simplechargingstationtertyshniy.repository.UserRepository;
@@ -41,22 +42,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO getById(Long userId) {
-        User user = getByUserId(userId);
-        return userMapper.toDto(user);
+        return userMapper.toDto(getByUserId(userId));
     }
 
     @Override
-    public void delete(String email, Long userId) {
+    public DeleteResponseDTO delete(String email, Long userId) {
+        DeleteResponseDTO deletedUser = new DeleteResponseDTO("User deleted, id: ", userId);
         User principalUser = getExistUser(email);
         User forDelete = getByUserId(userId);
         if (Role.BUYER == principalUser.getRole() || Role.SELLER == principalUser.getRole()) {
             if (principalUser.getEmail().equals(forDelete.getEmail())) {
                 userRepository.delete(getByUserId(userId));
-                return;
+                return deletedUser;
             }
             throw new ApiRequestException("No rights");
         }
         userRepository.delete(getByUserId(userId));
+        return deletedUser;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.extrawest.simplechargingstationtertyshniy.controller;
 
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargePointRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargePointResponseDTO;
+import com.extrawest.simplechargingstationtertyshniy.model.dto.response.DeleteResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.security.PrincipalUser;
 import com.extrawest.simplechargingstationtertyshniy.security.SecurityUser;
 import com.extrawest.simplechargingstationtertyshniy.service.ChargePointService;
@@ -34,7 +35,7 @@ public class ChargePointController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
-    public ResponseEntity<Page<ChargePointResponseDTO>> getAll(@PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<Page<ChargePointResponseDTO>> getAll(@PageableDefault Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(chargePointService.getAll(pageable));
     }
 
@@ -46,9 +47,8 @@ public class ChargePointController {
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAnyAuthority('users:remove', 'users:create')")
-    public ResponseEntity<String> deleteById(@PrincipalUser SecurityUser securityUser, @PathVariable Long id) {
-        chargePointService.delete(securityUser.getUsername(), id);
-        return ResponseEntity.ok("Charge point deleted, id: " + id);
+    public ResponseEntity<DeleteResponseDTO> deleteById(@PathVariable Long id, @PrincipalUser SecurityUser securityUser) {
+        return ResponseEntity.ok(chargePointService.delete(securityUser.getUsername(), id));
     }
 
     @PutMapping("/delete/{id}")

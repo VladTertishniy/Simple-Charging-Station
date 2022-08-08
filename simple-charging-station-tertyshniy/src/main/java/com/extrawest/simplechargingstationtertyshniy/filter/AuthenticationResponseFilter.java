@@ -29,7 +29,7 @@ public class AuthenticationResponseFilter implements Filter {
             log.info("=> Page not found {}", authentication);
             filterChain.doFilter(request, response);
         }
-        log.info("=> Congratulation with authentication {}, status {}", request.getRemoteUser(), response.getStatus());
+        log.info("=> Congratulation with authentication {}", authentication);
         filterChain.doFilter(request, response);
     }
 }

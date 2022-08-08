@@ -5,10 +5,10 @@ import com.extrawest.simplechargingstationtertyshniy.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ChargePointRepository extends JpaRepository<ChargePoint, Long> {
-    List<ChargePoint> findAllByUser(User user);
+    Optional<ChargePoint> findByUserAndId(User user, Long id);
 }
 

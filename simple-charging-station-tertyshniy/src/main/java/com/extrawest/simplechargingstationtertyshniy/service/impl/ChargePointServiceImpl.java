@@ -7,6 +7,7 @@ import com.extrawest.simplechargingstationtertyshniy.model.Role;
 import com.extrawest.simplechargingstationtertyshniy.model.User;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargePointRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargePointResponseDTO;
+import com.extrawest.simplechargingstationtertyshniy.model.dto.response.DeleteResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.mapper.ChargePointMapper;
 import com.extrawest.simplechargingstationtertyshniy.repository.ChargePointRepository;
 import com.extrawest.simplechargingstationtertyshniy.service.ChargePointService;
@@ -49,12 +50,13 @@ public class ChargePointServiceImpl implements ChargePointService {
     }
 
     @Override
-    public void delete(String email, Long chargePointId) {
+    public DeleteResponseDTO delete(String email, Long chargePointId) {
         User user = userService.getExistUser(email);
         if (Role.SELLER == user.getRole()) {
-            checkIsMy(user, chargePointId);
+            findByUserAndId(user, chargePointId);
         }
         chargePointRepository.delete(getChargePointById(chargePointId));
+        return new DeleteResponseDTO("Charge point deleted, id: ", chargePointId);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class ChargePointServiceImpl implements ChargePointService {
                                          ChargePointRequestDTO chargePointRequestDto) {
         User user = userService.getExistUser(email);
         if (Role.SELLER == user.getRole()) {
-            checkIsMy(user, chargePointId);
+            findByUserAndId(user, chargePointId);
         }
         Location location = locationService.getById(chargePointRequestDto.getLocationId());
         getById(chargePointId);
@@ -75,14 +77,10 @@ public class ChargePointServiceImpl implements ChargePointService {
         return chargePointMapper.toDto(chargePointRepository.save(chargePoint));
     }
 
-    private void checkIsMy(User user, Long id) {
-        List<ChargePoint> allByUser = chargePointRepository.findAllByUser(user);
-        for (ChargePoint chargePoint : allByUser) {
-            if (chargePoint.getId().equals(id)) {
-                return;
-            }
-        }
-        throw new ApiRequestException("No seller charge point with id: " + id);
+    @Override
+    public ChargePoint findByUserAndId(User user, Long id) {
+        return chargePointRepository.findByUserAndId(user, id)
+                .orElseThrow(() -> new ApiRequestException("No rights"));
     }
 
     @Override

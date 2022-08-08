@@ -4,6 +4,7 @@ import com.extrawest.simplechargingstationtertyshniy.exception.ApiRequestExcepti
 import com.extrawest.simplechargingstationtertyshniy.model.ChargingTransaction;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargingTransactionRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargingTransactionResponseDTO;
+import com.extrawest.simplechargingstationtertyshniy.model.dto.response.DeleteResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.mapper.ChargingTransactionMapper;
 import com.extrawest.simplechargingstationtertyshniy.repository.ChargingTransactionRepository;
 import com.extrawest.simplechargingstationtertyshniy.service.ChargePointService;
@@ -35,9 +36,9 @@ public class ChargingTransactionServiceImpl implements ChargingTransactionServic
         return chargingTransactionMapper.toDto(getChargingTransactionById(chargingTransactionId));
     }
 
-    @Override
-    public void delete(Long chargingTransactionId) {
+    public DeleteResponseDTO delete(Long chargingTransactionId) {
         chargingTransactionRepository.delete(getChargingTransactionById(chargingTransactionId));
+        return new DeleteResponseDTO("Charging transaction deleted, id: ", chargingTransactionId);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.extrawest.simplechargingstationtertyshniy.service.impl;
 import com.extrawest.simplechargingstationtertyshniy.exception.ApiRequestException;
 import com.extrawest.simplechargingstationtertyshniy.model.Location;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.LocationRequestDTO;
+import com.extrawest.simplechargingstationtertyshniy.model.dto.response.DeleteResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.mapper.LocationMapper;
 import com.extrawest.simplechargingstationtertyshniy.repository.LocationRepository;
 import com.extrawest.simplechargingstationtertyshniy.service.LocationService;
@@ -36,8 +37,9 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void delete(Long locationId) {
+    public DeleteResponseDTO delete(Long locationId) {
         locationRepository.delete(getById(locationId));
+        return new DeleteResponseDTO("Location deleted, id: ", locationId);
     }
 
     @Override

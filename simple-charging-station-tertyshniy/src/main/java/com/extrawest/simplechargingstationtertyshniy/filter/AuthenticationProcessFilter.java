@@ -16,11 +16,10 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (!request.getServletPath().equals("/login")) {
-            filterChain.doFilter(request, response);
-        } else {
-            log.info("=> Authentication is on processing... {}", request.getUserPrincipal());
+        if (request.getServletPath().equals("/login")) {
+            log.info("=> Authentication is on processing... ");
             filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 }
