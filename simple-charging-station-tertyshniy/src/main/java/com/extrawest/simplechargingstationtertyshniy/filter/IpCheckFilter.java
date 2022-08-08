@@ -31,12 +31,13 @@ public class IpCheckFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String ipAddress = request.getLocalAddr();
-        if (blackListIps.contains(ipAddress)) {
+        String ipAddress = request.getRemoteAddr();
+        if (!blackListIps.contains(ipAddress)) {
+            log.info("=> Your ip address is clear {}", ipAddress);
+            chain.doFilter(request, response);
+        } else {
             log.info("=> Your ip address is on black list {}", ipAddress);
             throw new ApiRequestException("Bad credentials");
         }
-        chain.doFilter(request, response);
-        log.info("=> Your ip address is clear {}", ipAddress);
     }
 }

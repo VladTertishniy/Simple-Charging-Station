@@ -3,6 +3,8 @@ package com.extrawest.simplechargingstationtertyshniy.controller;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.AuthenticationRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.UserRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.UserResponseDTO;
+import com.extrawest.simplechargingstationtertyshniy.security.PrincipalUser;
+import com.extrawest.simplechargingstationtertyshniy.security.SecurityUser;
 import com.extrawest.simplechargingstationtertyshniy.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,5 +40,11 @@ public class AuthenticationController {
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler logout = new SecurityContextLogoutHandler();
         logout.logout(request, response, null);
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<String> getRefreshToken(@PrincipalUser SecurityUser securityUser) {
+        String token = authenticationService.getRefreshToken(securityUser.getUsername(), securityUser.getPassword());
+        return ResponseEntity.ok(token);
     }
 }

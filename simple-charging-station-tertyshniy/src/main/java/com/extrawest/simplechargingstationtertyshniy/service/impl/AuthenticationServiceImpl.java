@@ -52,4 +52,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         return userMapper.toDto(userRepository.save(user));
     }
+
+    @Override
+    public String getRefreshToken(String login, String password) throws AuthenticationException {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
+        User user = userService.getExistUser(login);
+        return jwtTokenProvider.createRefreshToken(login, user.getRole().name());
+    }
 }

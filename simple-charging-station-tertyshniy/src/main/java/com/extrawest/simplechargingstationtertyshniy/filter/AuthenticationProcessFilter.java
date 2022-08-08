@@ -2,6 +2,7 @@ package com.extrawest.simplechargingstationtertyshniy.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -10,16 +11,16 @@ import java.io.IOException;
 
 @Component
 @Slf4j
-public class AuthenticationProcessFilter implements Filter {
+public class AuthenticationProcessFilter extends OncePerRequestFilter {
     @Override
-    public void doFilter(ServletRequest servletRequest,
-                         ServletResponse servletResponse,
-                         FilterChain filterChain) throws IOException, ServletException {
-
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        filterChain.doFilter(request, response);
-        log.info("=> Authentication is on processing... {}", request.getUserPrincipal());
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        if (!request.getServletPath().equals("/login")) {
+            filterChain.doFilter(request, response);
+        } else {
+            log.info("=> Authentication is on processing... {}", request.getUserPrincipal());
+            filterChain.doFilter(request, response);
+        }
     }
 }

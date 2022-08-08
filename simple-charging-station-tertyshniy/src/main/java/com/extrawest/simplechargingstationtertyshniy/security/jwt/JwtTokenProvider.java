@@ -40,6 +40,20 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String createRefreshToken(String userName, String role) {
+        Claims claims = Jwts.claims().setSubject(userName);
+        claims.put("role", role);
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityInMilliseconds * 1000000L);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
