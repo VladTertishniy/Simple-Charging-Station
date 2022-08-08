@@ -13,6 +13,7 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -44,16 +46,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long userId) {
+    public void delete(String email, Long userId) {
+        User principalUser = getExistUser(email);
+        User forDelete = getByUserId(userId);
+        if (Role.BUYER == principalUser.getRole() || Role.SELLER == principalUser.getRole()) {
+            if (principalUser.getEmail().equals(forDelete.getEmail())) {
+                userRepository.delete(getByUserId(userId));
+            }
+            throw new ApiRequestException("No rights");
+        }
         userRepository.delete(getByUserId(userId));
     }
 
     @Override
-    public UserResponseDTO update(Long userId, UserRequestDTO userRequestDto) {
-        getById(userId);
-        User user = userMapper.toModel(userRequestDto);
-        user.setId(userId);
-        return userMapper.toDto(userRepository.save(user));
+    public UserResponseDTO update(String email, Long userId, UserRequestDTO userRequestDto) {
+        User principalUser = getExistUser(email);
+        User updatedUser = getUpdatedUser(userId, userRequestDto);
+        if (Role.BUYER == principalUser.getRole() || Role.SELLER == principalUser.getRole()) {
+            if (principalUser.getEmail().equals(userRequestDto.getEmail())) {
+                return userMapper.toDto(create(updatedUser));
+            }
+            throw new ApiRequestException("No rights");
+        }
+        if (Role.MANAGER == principalUser.getRole() && Role.ADMIN == updatedUser.getRole()) {
+            throw new ApiRequestException("No rights");
+        }
+        return userMapper.toDto(create(updatedUser));
     }
 
     @Override
@@ -65,6 +83,14 @@ public class UserServiceImpl implements UserService {
     private User getByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
                 new ApiRequestException("User with id: " + userId + " not found"));
+    }
+
+    private User getUpdatedUser(Long userId, UserRequestDTO userRequestDto) {
+        User user = getByUserId(userId);
+        user.setName(userRequestDto.getName());
+        user.setEmail(userRequestDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        return user;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.extrawest.simplechargingstationtertyshniy.service;
 
+import com.extrawest.simplechargingstationtertyshniy.model.ChargePoint;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargePointRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargePointResponseDTO;
 import org.springframework.data.domain.Page;
@@ -15,5 +16,7 @@ public interface ChargePointService {
     void delete(String email, Long id);
 
     ChargePointResponseDTO update(String email, Long chargePointId, ChargePointRequestDTO chargePointRequestDto);
+
+    ChargePoint getChargePointById(long chargePointId);
 }
 

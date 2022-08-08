@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class ChargingTransactionRequestDTO {
     private long chargePointId;
-    private long userId;
 }
 

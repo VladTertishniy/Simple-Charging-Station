@@ -2,6 +2,8 @@ package com.extrawest.simplechargingstationtertyshniy.controller;
 
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargingTransactionRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargingTransactionResponseDTO;
+import com.extrawest.simplechargingstationtertyshniy.security.PrincipalUser;
+import com.extrawest.simplechargingstationtertyshniy.security.SecurityUser;
 import com.extrawest.simplechargingstationtertyshniy.service.ChargingTransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,11 +46,19 @@ public class ChargingTransactionController {
 
     @PostMapping("/start")
     @PreAuthorize("hasAuthority('users:read')")
-    public ResponseEntity<String> startTransaction(
-            @RequestBody @Valid ChargingTransactionRequestDTO chargingTransactionRequestDto) {
-        return ResponseEntity.ok("Transaction "
-                + chargingTransactionService.startTransaction(chargingTransactionRequestDto)
-                + "started successfully!");
+    public ResponseEntity<Long> startTransaction(
+            @PrincipalUser SecurityUser securityUser,
+            @RequestBody ChargingTransactionRequestDTO chargingTransactionRequestDto) {
+        return ResponseEntity.ok(chargingTransactionService
+                .startTransaction(securityUser.getUsername(), chargingTransactionRequestDto));
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('users:remove')")
+    public ResponseEntity<ChargingTransactionResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody ChargingTransactionRequestDTO chargingTransactionRequestDto) {
+        return ResponseEntity.ok(chargingTransactionService.update(id, chargingTransactionRequestDto));
     }
 }
 

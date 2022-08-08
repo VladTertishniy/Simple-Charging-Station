@@ -12,6 +12,7 @@ public class ChargePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "charge_point_model", nullable = false)
     private String chargePointModel;
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)

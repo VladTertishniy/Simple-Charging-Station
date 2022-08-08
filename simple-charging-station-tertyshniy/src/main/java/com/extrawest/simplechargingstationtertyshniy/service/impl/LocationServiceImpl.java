@@ -42,11 +42,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Location update(Long locationId, LocationRequestDTO locationRequestDto) {
-        getById(locationId);
-        Location location = locationMapper.toModel(locationRequestDto);
-        location.setId(locationId);
-        locationRepository.save(location);
-        return location;
+        Location location = getById(locationId);
+        location.setAddress(locationRequestDto.getAddress());
+        return locationRepository.save(location);
     }
 
 }

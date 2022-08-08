@@ -16,6 +16,6 @@ public interface ChargingTransactionService {
     ChargingTransactionResponseDTO update(Long chargingTransactionId,
                                           ChargingTransactionRequestDTO chargingTransactionRequestDto);
 
-    Long startTransaction(ChargingTransactionRequestDTO chargingTransactionRequestDto);
+    Long startTransaction(String email, ChargingTransactionRequestDTO chargingTransactionRequestDto);
 }
 

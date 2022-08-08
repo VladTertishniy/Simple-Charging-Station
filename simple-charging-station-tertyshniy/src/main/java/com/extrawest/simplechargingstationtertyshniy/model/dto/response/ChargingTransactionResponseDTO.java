@@ -4,8 +4,7 @@ import lombok.Data;
 
 @Data
 public class ChargingTransactionResponseDTO {
-    private long id;
-    private ChargePointResponseDTO chargePointResponseDto;
-    private UserResponseDTO user;
+    private String address;
+    private String userName;
 }
 

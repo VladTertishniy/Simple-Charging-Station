@@ -75,11 +75,6 @@ public class ChargePointServiceImpl implements ChargePointService {
         return chargePointMapper.toDto(chargePointRepository.save(chargePoint));
     }
 
-    private ChargePoint getChargePointById(Long chargePointId) {
-        return chargePointRepository.findById(chargePointId).orElseThrow(() ->
-                new ApiRequestException("Charge point with id: " + chargePointId + " not found"));
-    }
-
     private void checkIsMy(User user, Long id) {
         List<ChargePoint> allByUser = chargePointRepository.findAllByUser(user);
         for (ChargePoint chargePoint : allByUser) {
@@ -88,5 +83,11 @@ public class ChargePointServiceImpl implements ChargePointService {
             }
         }
         throw new ApiRequestException("No seller charge point with id: " + id);
+    }
+
+    @Override
+    public ChargePoint getChargePointById(long chargePointId) {
+        return chargePointRepository.findById(chargePointId).orElseThrow(() ->
+                new ApiRequestException("No charge points with id: " + chargePointId));
     }
 }

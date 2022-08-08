@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 public interface ChargingTransactionMapper {
 
     @Mapping(source = "chargePointId", target = "chargePoint.id")
-    @Mapping(source = "userId", target = "user.id")
     ChargingTransaction toModel(ChargingTransactionRequestDTO chargingTransactionRequestDto);
 
     ChargingTransactionResponseDTO toDto(ChargingTransaction chargingTransaction);

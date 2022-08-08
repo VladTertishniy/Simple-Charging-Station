@@ -43,24 +43,20 @@ public class ChargingTransactionServiceImpl implements ChargingTransactionServic
     @Override
     public ChargingTransactionResponseDTO update(Long chargingTransactionId,
                                                  ChargingTransactionRequestDTO chargingTransactionRequestDto) {
-        getById(chargingTransactionId);
-        ChargingTransaction chargingTransaction = chargingTransactionMapper.toModel(chargingTransactionRequestDto);
-        chargingTransaction.setId(chargingTransactionId);
+        ChargingTransaction chargingTransaction = getChargingTransactionById(chargingTransactionId);
+        chargingTransaction.setChargePoint(chargePointService
+                .getChargePointById(chargingTransactionRequestDto.getChargePointId()));
         return chargingTransactionMapper.toDto(chargingTransactionRepository.save(chargingTransaction));
     }
 
     @Override
-    public Long startTransaction(ChargingTransactionRequestDTO chargingTransactionRequestDto) {
-        if (chargePointService.getById(chargingTransactionRequestDto.getChargePointId()) != null
-                || userService.getById(chargingTransactionRequestDto.getUserId()) != null) {
-            return create(chargingTransactionRequestDto);
+    public Long startTransaction(String email, ChargingTransactionRequestDTO chargingTransactionRequestDto) {
+        if (chargePointService.getById(chargingTransactionRequestDto.getChargePointId()) != null) {
+            ChargingTransaction chargingTransaction = chargingTransactionMapper.toModel(chargingTransactionRequestDto);
+            chargingTransaction.setUser(userService.getExistUser(email));
+            return chargingTransactionRepository.save(chargingTransaction).getId();
         }
         throw new ApiRequestException("No charging transaction");
-    }
-
-    public Long create(ChargingTransactionRequestDTO chargingTransactionRequestDto) {
-        return chargingTransactionRepository
-                .save(chargingTransactionMapper.toModel(chargingTransactionRequestDto)).getId();
     }
 
     private ChargingTransaction getChargingTransactionById(Long chargingTransactionId) {

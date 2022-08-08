@@ -23,7 +23,7 @@ public class LocationController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('users:update')")
-    public ResponseEntity<Location> save(@RequestBody @Valid LocationRequestDTO locationRequestDto) {
+    public ResponseEntity<Location> save(@RequestBody LocationRequestDTO locationRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(locationService.create(locationRequestDto));
     }
 
@@ -51,6 +51,13 @@ public class LocationController {
     public ResponseEntity<Location> deleteById(@PathVariable Long id,
                                                @RequestBody @Valid LocationRequestDTO locationRequestDto) {
         locationService.delete(id);
+        return ResponseEntity.ok(locationService.update(id, locationRequestDto));
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('users:update')")
+    public ResponseEntity<Location> update(@PathVariable Long id,
+                                           @RequestBody LocationRequestDTO locationRequestDto) {
         return ResponseEntity.ok(locationService.update(id, locationRequestDto));
     }
 }
