@@ -17,7 +17,7 @@ public class IpCheckFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        blackListIps.add("0:0:0:0:0:0:0:2");
+        blackListIps.add("0:0:0:0:0:0:0:1");
         blackListIps.add("0:0:0:0:0:0:1:1");
         blackListIps.add("0:0:0:0:0:1:0:1");
     }
