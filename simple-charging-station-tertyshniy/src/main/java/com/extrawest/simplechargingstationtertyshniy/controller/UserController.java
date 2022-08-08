@@ -3,6 +3,7 @@ package com.extrawest.simplechargingstationtertyshniy.controller;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.UserRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.UserResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.security.PrincipalUser;
+import com.extrawest.simplechargingstationtertyshniy.security.SecurityUser;
 import com.extrawest.simplechargingstationtertyshniy.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.file.attribute.UserPrincipal;
 
 @RestController
 @RequestMapping("/users")
@@ -37,16 +37,16 @@ public class UserController {
 
     @DeleteMapping("/deleteUser/{id}")
     @PreAuthorize("hasAnyAuthority('users:read', 'users:create')")
-    public ResponseEntity<String> deleteById(@PrincipalUser UserPrincipal userPrincipal, @PathVariable Long id) {
-        userService.delete(userPrincipal.getName(), id);
+    public ResponseEntity<String> deleteById(@PrincipalUser SecurityUser securityUser, @PathVariable Long id) {
+        userService.delete(securityUser.getUsername(), id);
         return ResponseEntity.ok("User with id: " + id + " deleted");
     }
 
     @PutMapping("/updateUser/{id}")
     @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
-    public ResponseEntity<UserResponseDTO> update(@PrincipalUser UserPrincipal userPrincipal,
+    public ResponseEntity<UserResponseDTO> update(@PrincipalUser SecurityUser securityUser,
                                                   @PathVariable Long id,
                                                   @RequestBody @Valid UserRequestDTO userRequestDto) {
-        return ResponseEntity.ok(userService.update(userPrincipal.getName(), id, userRequestDto));
+        return ResponseEntity.ok(userService.update(securityUser.getUsername(), id, userRequestDto));
     }
 }

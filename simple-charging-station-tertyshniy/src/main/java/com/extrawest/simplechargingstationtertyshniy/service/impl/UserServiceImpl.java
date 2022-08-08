@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
         if (Role.BUYER == principalUser.getRole() || Role.SELLER == principalUser.getRole()) {
             if (principalUser.getEmail().equals(forDelete.getEmail())) {
                 userRepository.delete(getByUserId(userId));
+                return;
             }
             throw new ApiRequestException("No rights");
         }

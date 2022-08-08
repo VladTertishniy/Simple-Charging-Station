@@ -24,12 +24,12 @@ public class AuthenticationResponseFilter implements Filter {
         if (authentication != 200) {
             if (authentication == 401 || authentication == 403) {
                 log.info("=> You have no rights for watching this content {}", authentication);
-                return;
+                filterChain.doFilter(request, response);
             }
             log.info("=> Page not found {}", authentication);
-            return;
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
         log.info("=> Congratulation with authentication {}, status {}", request.getRemoteUser(), response.getStatus());
+        filterChain.doFilter(request, response);
     }
 }

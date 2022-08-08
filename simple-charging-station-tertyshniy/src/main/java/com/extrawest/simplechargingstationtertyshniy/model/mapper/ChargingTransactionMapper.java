@@ -12,6 +12,8 @@ public interface ChargingTransactionMapper {
     @Mapping(source = "chargePointId", target = "chargePoint.id")
     ChargingTransaction toModel(ChargingTransactionRequestDTO chargingTransactionRequestDto);
 
+    @Mapping(source = "chargePoint.location.address", target = "address")
+    @Mapping(source = "user.name", target = "userName")
     ChargingTransactionResponseDTO toDto(ChargingTransaction chargingTransaction);
 }
 

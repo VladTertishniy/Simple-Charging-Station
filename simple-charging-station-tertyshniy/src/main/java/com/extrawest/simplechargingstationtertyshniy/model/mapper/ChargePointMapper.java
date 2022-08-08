@@ -11,8 +11,9 @@ public interface ChargePointMapper {
 
     //    @Mapping(target = "location", expression = "java(locationService.getById(chargePointRequestDto.getLocationId()))")
 //    @Mapping(target = "user", expression = "java(userService.getById(chargePoint.getUserId()))")
-//    @Mapping(source = "user.id", target = "location.id")
-//    @Mapping(source = "userId", target = "user.id")
+    @Mapping(source = "location.address", target = "address")
+    @Mapping(source = "user.name", target = "ownerName")
+    @Mapping(source = "user.email", target = "ownerEmail")
     ChargePointResponseDTO toDto(ChargePoint chargePoint);
 
     @Mapping(source = "locationId", target = "location.id")

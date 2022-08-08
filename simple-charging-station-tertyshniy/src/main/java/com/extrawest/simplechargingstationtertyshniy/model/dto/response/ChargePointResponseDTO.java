@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class ChargePointResponseDTO {
     private String chargePointModel;
-    private Location location;
-    private UserResponseDTO user;
+    private String address;
+    private String ownerName;
+    private String ownerEmail;
 }

@@ -39,10 +39,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String login(String login, String password) throws AuthenticationException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         User user = userService.getExistUser(login);
-//        String encodedPassword = passwordEncoder.passwordEncoder().encode(password);
-//        if (user.getPassword().equals(encodedPassword)) {
-//            throw new ApiRequestException(ExceptionMessage.BAD_CREDENTIALS);
-//        }
+        String encodedPassword = passwordEncoder.encode(password);
+        if (user.getPassword().equals(encodedPassword)) {
+            throw new ApiRequestException("Bad credentials");
+        }
         return jwtTokenProvider.createToken(login, user.getRole().name());
     }
 
