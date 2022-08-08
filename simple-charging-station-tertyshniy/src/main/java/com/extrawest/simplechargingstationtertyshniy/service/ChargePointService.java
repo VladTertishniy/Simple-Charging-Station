@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ChargePointService {
-    ChargePointResponseDTO create(ChargePointRequestDTO chargePointRequestDto);
+    ChargePointResponseDTO create(String email, ChargePointRequestDTO chargePointRequestDto);
 
     Page<ChargePointResponseDTO> getAll(Pageable pageable);
 
     ChargePointResponseDTO getById(Long id);
 
-    void delete(Long id);
+    void delete(String email, Long id);
 
-    ChargePointResponseDTO update(Long chargePointId, ChargePointRequestDTO chargePointRequestDto);
+    ChargePointResponseDTO update(String email, Long chargePointId, ChargePointRequestDTO chargePointRequestDto);
 }
 

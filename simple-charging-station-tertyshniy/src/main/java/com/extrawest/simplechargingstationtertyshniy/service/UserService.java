@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface UserService {
-    UserResponseDTO create(UserRequestDTO userRequestDto);
+    User create(User user);
 
     Page<UserResponseDTO> getAll(Pageable pageable);
 

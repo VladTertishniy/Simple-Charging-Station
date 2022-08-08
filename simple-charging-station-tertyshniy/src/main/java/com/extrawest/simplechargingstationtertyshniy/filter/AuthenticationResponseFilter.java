@@ -23,9 +23,11 @@ public class AuthenticationResponseFilter implements Filter {
         int authentication = response.getStatus();
         if (authentication != 200) {
             if (authentication == 401 || authentication == 403) {
+                filterChain.doFilter(request, response);
                 log.info("=> You have no rights for watching this content {}", authentication);
                 return;
             }
+            filterChain.doFilter(request, response);
             log.info("=> Page not found {}", authentication);
             return;
         }

@@ -2,6 +2,8 @@ package com.extrawest.simplechargingstationtertyshniy.controller;
 
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargePointRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargePointResponseDTO;
+import com.extrawest.simplechargingstationtertyshniy.security.PrincipalUser;
+import com.extrawest.simplechargingstationtertyshniy.security.SecurityUser;
 import com.extrawest.simplechargingstationtertyshniy.service.ChargePointService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,37 +24,39 @@ public class ChargePointController {
     private final ChargePointService chargePointService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('users:update')")
+    @PreAuthorize("hasAuthority('users:create')")
     public ResponseEntity<ChargePointResponseDTO> save(
+            @PrincipalUser SecurityUser securityUser,
             @RequestBody @Valid ChargePointRequestDTO chargePointRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(chargePointService.create(chargePointRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(chargePointService.create(securityUser.getUsername(), chargePointRequestDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('users:update')")
+    @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
     public ResponseEntity<Page<ChargePointResponseDTO>> getAll(@PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(chargePointService.getAll(pageable));
     }
 
     @GetMapping("/get/{id}")
-    @PreAuthorize("hasAuthority('users:update')")
+    @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
     public ResponseEntity<ChargePointResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(chargePointService.getById(id));
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('users:update')")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        chargePointService.delete(id);
-        return ResponseEntity.ok("Charge point with id: " + id + " deleted");
+    @PreAuthorize("hasAnyAuthority('users:remove', 'users:create')")
+    public ResponseEntity<String> deleteById(@PrincipalUser SecurityUser securityUser, @PathVariable Long id) {
+        chargePointService.delete(securityUser.getUsername(), id);
+        return ResponseEntity.ok("Charge point deleted, id: " + id);
     }
 
     @PutMapping("/delete/{id}")
-    @PreAuthorize("hasAnyAuthority('users:update', 'users:remove')")
-    public ResponseEntity<ChargePointResponseDTO> deleteById(
+    @PreAuthorize("hasAuthority('users:update')")
+    public ResponseEntity<ChargePointResponseDTO> update(
+            @PrincipalUser SecurityUser securityUser,
             @PathVariable Long id,
             @RequestBody @Valid ChargePointRequestDTO chargePointRequestDto) {
-        chargePointService.delete(id);
-        return ResponseEntity.ok(chargePointService.update(id, chargePointRequestDto));
+        return ResponseEntity.ok(chargePointService.update(securityUser.getUsername(), id, chargePointRequestDto));
     }
 }

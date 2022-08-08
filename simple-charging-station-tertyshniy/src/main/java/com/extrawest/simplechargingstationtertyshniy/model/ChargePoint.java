@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class ChargePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String chargePointModel;
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)

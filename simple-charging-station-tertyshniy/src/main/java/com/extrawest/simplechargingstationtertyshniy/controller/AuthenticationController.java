@@ -7,11 +7,14 @@ import com.extrawest.simplechargingstationtertyshniy.service.AuthenticationServi
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -27,7 +30,13 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid AuthenticationRequestDTO requestDto) {
-        authenticationService.login(requestDto.getEmail(), requestDto.getPassword());
-        return ResponseEntity.ok("Congratulate with success log in!");
+        String token = authenticationService.login(requestDto.getEmail(), requestDto.getPassword());
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextLogoutHandler logout = new SecurityContextLogoutHandler();
+        logout.logout(request, response, null);
     }
 }

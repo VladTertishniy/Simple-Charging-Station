@@ -16,7 +16,6 @@ public interface ChargePointMapper {
     ChargePointResponseDTO toDto(ChargePoint chargePoint);
 
     @Mapping(source = "locationId", target = "location.id")
-    @Mapping(source = "userId", target = "user.id")
     ChargePoint toModel(ChargePointRequestDTO chargePointRequestDto);
 }
 

@@ -20,11 +20,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    protected User(String email, String password, long phoneNumber, String name, Role role) {
+    public User(String name, String email, String password, Role role) {
+        this.name = name;
         this.email = email;
         this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.name = name;
+        this.role = role;
+    }
+
+    public User(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
         this.role = role;
     }
 }

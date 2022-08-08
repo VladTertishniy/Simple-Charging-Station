@@ -28,7 +28,7 @@ public class LocationController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('users:update')")
+    @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<Page<Location>> getAll(@PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(locationService.getAll(pageable));
     }

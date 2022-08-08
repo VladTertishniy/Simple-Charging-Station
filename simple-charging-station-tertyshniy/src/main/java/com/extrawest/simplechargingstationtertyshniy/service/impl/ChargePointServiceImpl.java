@@ -2,6 +2,9 @@ package com.extrawest.simplechargingstationtertyshniy.service.impl;
 
 import com.extrawest.simplechargingstationtertyshniy.exception.ApiRequestException;
 import com.extrawest.simplechargingstationtertyshniy.model.ChargePoint;
+import com.extrawest.simplechargingstationtertyshniy.model.Location;
+import com.extrawest.simplechargingstationtertyshniy.model.Role;
+import com.extrawest.simplechargingstationtertyshniy.model.User;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.request.ChargePointRequestDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.dto.response.ChargePointResponseDTO;
 import com.extrawest.simplechargingstationtertyshniy.model.mapper.ChargePointMapper;
@@ -15,6 +18,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ChargePointServiceImpl implements ChargePointService {
@@ -24,13 +29,12 @@ public class ChargePointServiceImpl implements ChargePointService {
     private final UserService userService;
 
     @Override
-    public ChargePointResponseDTO create(ChargePointRequestDTO chargePointRequestDto) {
-        if (locationService.getById(chargePointRequestDto.getLocationId()) != null
-                || userService.getById(chargePointRequestDto.getUserId()) != null) {
-            return chargePointMapper.toDto(chargePointRepository
-                    .save(chargePointMapper.toModel(chargePointRequestDto)));
-        }
-        throw new ApiRequestException("No charge point");
+    public ChargePointResponseDTO create(String email, ChargePointRequestDTO chargePointRequestDto) {
+        Location location = locationService.getById(chargePointRequestDto.getLocationId());
+        ChargePoint chargePoint = chargePointMapper.toModel(chargePointRequestDto);
+        chargePoint.setUser(userService.getExistUser(email));
+        chargePoint.setLocation(location);
+        return chargePointMapper.toDto(chargePointRepository.save(chargePoint));
     }
 
     @Override
@@ -45,20 +49,44 @@ public class ChargePointServiceImpl implements ChargePointService {
     }
 
     @Override
-    public void delete(Long chargePointId) {
+    public void delete(String email, Long chargePointId) {
+        User user = userService.getExistUser(email);
+        if (Role.SELLER == user.getRole()) {
+            checkIsMy(user, chargePointId);
+        }
         chargePointRepository.delete(getChargePointById(chargePointId));
     }
 
     @Override
-    public ChargePointResponseDTO update(Long chargePointId, ChargePointRequestDTO chargePointRequestDto) {
+    public ChargePointResponseDTO update(String email,
+                                         Long chargePointId,
+                                         ChargePointRequestDTO chargePointRequestDto) {
+        User user = userService.getExistUser(email);
+        if (Role.SELLER == user.getRole()) {
+            checkIsMy(user, chargePointId);
+        }
+        Location location = locationService.getById(chargePointRequestDto.getLocationId());
         getById(chargePointId);
         ChargePoint chargePoint = chargePointMapper.toModel(chargePointRequestDto);
         chargePoint.setId(chargePointId);
+        chargePoint.setLocation(location);
+        chargePoint.setUser(chargePointRepository.findById(chargePointId).orElseThrow(() ->
+                new ApiRequestException("No charge point with id: " + chargePointId)).getUser());
         return chargePointMapper.toDto(chargePointRepository.save(chargePoint));
     }
 
     private ChargePoint getChargePointById(Long chargePointId) {
         return chargePointRepository.findById(chargePointId).orElseThrow(() ->
                 new ApiRequestException("Charge point with id: " + chargePointId + " not found"));
+    }
+
+    private void checkIsMy(User user, Long id) {
+        List<ChargePoint> allByUser = chargePointRepository.findAllByUser(user);
+        for (ChargePoint chargePoint : allByUser) {
+            if (chargePoint.getId().equals(id)) {
+                return;
+            }
+        }
+        throw new ApiRequestException("No seller charge point with id: " + id);
     }
 }

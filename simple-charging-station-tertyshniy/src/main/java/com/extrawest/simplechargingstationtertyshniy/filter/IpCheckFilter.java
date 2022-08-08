@@ -1,5 +1,6 @@
 package com.extrawest.simplechargingstationtertyshniy.filter;
 
+import com.extrawest.simplechargingstationtertyshniy.exception.ApiRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class IpCheckFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        blackListIps.add("0:0:0:0:0:0:0:1");
+        blackListIps.add("0:0:0:0:0:0:0:2");
         blackListIps.add("0:0:0:0:0:0:1:1");
         blackListIps.add("0:0:0:0:0:1:0:1");
     }
@@ -33,7 +34,7 @@ public class IpCheckFilter implements Filter {
         String ipAddress = request.getLocalAddr();
         if (blackListIps.contains(ipAddress)) {
             log.info("=> Your ip address is on black list {}", ipAddress);
-            return;
+            throw new ApiRequestException("Bad credentials");
         }
         chain.doFilter(request, response);
         log.info("=> Your ip address is clear {}", ipAddress);

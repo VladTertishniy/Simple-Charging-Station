@@ -6,6 +6,5 @@ import lombok.Data;
 public class ChargePointRequestDTO {
     private String chargePointModel;
     private long locationId;
-    private long userId;
 }
 

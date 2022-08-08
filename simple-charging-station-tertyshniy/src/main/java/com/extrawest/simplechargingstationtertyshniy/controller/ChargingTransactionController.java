@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,23 +23,27 @@ public class ChargingTransactionController {
 
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
     public ResponseEntity<Page<ChargingTransactionResponseDTO>> getAll(
             @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(chargingTransactionService.getAll(pageable));
     }
 
     @GetMapping("/get/{id}")
+    @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
     public ResponseEntity<ChargingTransactionResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(chargingTransactionService.getById(id));
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('users:read', 'users:update')")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         chargingTransactionService.delete(id);
         return ResponseEntity.ok("Transaction with id: " + id + " deleted");
     }
 
     @PostMapping("/start")
+    @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<String> startTransaction(
             @RequestBody @Valid ChargingTransactionRequestDTO chargingTransactionRequestDto) {
         return ResponseEntity.ok("Transaction "

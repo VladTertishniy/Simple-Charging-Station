@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public enum Role {
-    SELLER(Set.of(Permission.USERS_READ, Permission.USERS_UPDATE, Permission.USERS_CREATE)),
+    SELLER(Set.of(Permission.USERS_UPDATE, Permission.USERS_CREATE)),
     BUYER(Set.of(Permission.USERS_READ)),
-    MANAGER(Set.of(Permission.USERS_READ, Permission.USERS_UPDATE)),
-    ADMIN(Set.of(Permission.USERS_READ, Permission.USERS_CREATE, Permission.USERS_UPDATE, Permission.USERS_REMOVE));
+    MANAGER(Set.of(Permission.USERS_UPDATE)),
+    ADMIN(Set.of(Permission.USERS_READ, Permission.USERS_UPDATE, Permission.USERS_REMOVE));
 
     private final Set<Permission> permissions;
 

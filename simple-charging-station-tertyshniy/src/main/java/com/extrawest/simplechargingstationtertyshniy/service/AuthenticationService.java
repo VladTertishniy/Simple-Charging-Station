@@ -6,5 +6,5 @@ import org.springframework.security.core.AuthenticationException;
 
 public interface AuthenticationService {
     UserResponseDTO register(UserRequestDTO userRequestDto);
-    void login(String login, String password) throws AuthenticationException;
+    String login(String login, String password) throws AuthenticationException;
 }
